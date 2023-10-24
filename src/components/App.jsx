@@ -1,38 +1,45 @@
-import React from 'react';
-import { Link, Routes, Route } from 'react-router-dom';
-import {Home} from "./Home/Home";
+import React, { Suspense } from 'react';
+import { Routes, Route, NavLink } from 'react-router-dom';
+import { Home } from './Home/Home';
+import css from './App.module.css';
+import { Loader } from './Loader/Loader';
+const Movies = React.lazy(() => import('./Movies/Movies'));
+const MovieDetails = React.lazy(() => import('./MovieDetails/MovieDetails'));
+const Cast = React.lazy(() => import('./Cast/Cast'));
+const Reviews = React.lazy(() => import('./Reviews/Reviews'));
 
 const APP_PATH = '/goit-react-hw-05-movies';
-
 export const App = () => {
   return (
-    <div >
-      <nav style={{
-        height: '100vh',
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        fontSize: 40,
-        color: '#010101'
-      }}>
-        <Link to={`${APP_PATH}/`} style={{ marginRight: 24 }}>
+    <div className={css.container}>
+      <nav className={css.navLink}>
+        <NavLink
+          to={`${APP_PATH}/`}
+          className={({ isActive }) => (isActive ? css.active : css.nonActive)}
+        >
           Home
-        </Link>
-        <Link to={`${APP_PATH}/movies`} style={{ marginRight: 24 }}>
+        </NavLink>
+        <NavLink
+          to={`${APP_PATH}/movies`}
+          className={({ isActive }) => (isActive ? css.active : css.nonActive)}
+        >
           Movies
-        </Link>
-        <Link to={`${APP_PATH}/movies/1`} style={{ marginRight: 24 }}>
-          MovieDetails
-        </Link>
+        </NavLink>
       </nav>
-      <Routes>
-        <Route path={`${APP_PATH}/`} element={<Home />} />
-        <Route path={`${APP_PATH}/movies`} element={<Home />} />
-        <Route path={`${APP_PATH}/movies/:movieId`} element={<Home />}>
-          {/*<Route path="cast" element={<Cast />} />*/}
-          {/*<Route path="reviews" element={<Reviews />} />*/}
-        </Route>
-      </Routes>
+      <Suspense fallback={<Loader />}>
+        <Routes>
+          <Route path={`${APP_PATH}/`} element={<Home />} />
+          <Route path={`${APP_PATH}/movies`} element={<Movies />} />
+          <Route
+            path={`${APP_PATH}/movies/:movieId`}
+            element={<MovieDetails />}
+          >
+            <Route path="cast" element={<Cast />} />
+            <Route path="reviews" element={<Reviews />} />
+          </Route>
+          <Route path={`*`} element={<Home />} />
+        </Routes>
+      </Suspense>
     </div>
   );
 };

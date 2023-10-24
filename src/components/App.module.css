@@ -12,7 +12,7 @@
 
 .active {
   font-weight: bold;
-  font-size: xxx-large;
+  font-size: large;
   color: red;
 }
 .nonActive {
