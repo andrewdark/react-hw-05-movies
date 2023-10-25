@@ -10,12 +10,23 @@ const Movies = () => {
   const [error, setError] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
+  const hendleSubmit = event => {
+    event.preventDefault();
+    setGoit(true);
+  };
+
+  const hendleChange = event => {
+    const { value } = event.target;
+    setSearchQuery(value);
+  };
+
   useEffect(() => {
-    if (searchQuery && goit) {
+    if (searchQuery && searchQuery.length > 0 && goit) {
       setIsLoading(true);
       getMovies(searchQuery, 1)
         .then(data => {
           setSearchResults(data.results);
+          window.history.replaceState(null, '', `movies?query=${searchQuery}`);
         })
         .catch(err => {
           setError(err);
@@ -26,26 +37,22 @@ const Movies = () => {
           setSearchQuery('');
         });
     }
-  }, [searchQuery, goit]);
+  }, [goit, searchQuery]);
+
   return (
     <div>
       <h1>Search Movies</h1>
-      <input
-        type="text"
-        placeholder="type somethin for searching..."
-        required
-        value={searchQuery}
-        onChange={e => setSearchQuery(e.target.value)}
-      />
-      <button
-        onClick={() => {
-          if (searchQuery && searchQuery.length > 0) {
-            setGoit(true);
-          }
-        }}
-      >
-        Search
-      </button>
+      <form onSubmit={hendleSubmit} method="GET">
+        <input
+          type="text"
+          placeholder="type somethin for searching..."
+          required
+          onChange={hendleChange}
+          value={searchQuery}
+        />
+        <button type="submit">Search</button>
+      </form>
+
       {error != null && <p>{error}</p>}
       {isLoading && <Loader />}
       <ul>
