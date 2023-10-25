@@ -1,10 +1,13 @@
-import { Link, Outlet, useParams } from 'react-router-dom';
+import { Link, Outlet, useParams, useNavigate } from 'react-router-dom';
 import { getDetails } from '../../services/api';
 import { useState, useEffect } from 'react';
+import goback from '../../img/goback.png';
+import css from './MovieDetails.module.css';
 
 const MovieDetails = () => {
   const { movieId } = useParams();
   const [movie, setMovie] = useState(null);
+  const navigante = useNavigate();
 
   useEffect(() => {
     getDetails(movieId)
@@ -17,6 +20,9 @@ const MovieDetails = () => {
   }, [movieId]);
   return (
     <main>
+      <button className={css.goback} onClick={() => navigante(-1)}>
+        <img src={goback} alt="go back" />
+      </button>
       {movie && (
         <div>
           <img
