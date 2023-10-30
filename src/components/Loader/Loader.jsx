@@ -1,4 +1,3 @@
-export const Loader = ()=>{
-
-  return <h1>Loading ...</h1>
-}
+export const Loader = () => {
+  return <h1>LOADING ... </h1>;
+};
